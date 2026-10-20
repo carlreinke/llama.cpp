@@ -82,7 +82,7 @@ jobs:
           # UI, ggml-cpu) - inject it into the other windows zips so that every archive
           # ships the same binaries, only with a different backend library on top
           echo "Injecting windows-cpu binaries (llama-server + CPU backend) into the backend zips..."
-          for arch in x64 arm64; do
+          for arch in x64; do
             cpu_zip="artifact/llama-bin-win-cpu-${arch}.zip"
             temp_dir=$(mktemp -d)
             echo "Extracting windows-cpu-${arch} package..."
@@ -111,8 +111,8 @@ jobs:
 
           echo "Moving other artifacts..."
           rm -f artifact/llama-ui.zip
-          mv -v artifact/*.zip release
-          mv -v artifact/*.tar.gz release
+#          mv -v artifact/*.zip release
+#          mv -v artifact/*.tar.gz release
 
       - name: Download UI build
         if: ${{ steps.check.outputs.should_release == 'true' }}
@@ -231,15 +231,15 @@ jobs:
               }
             }
 
-  ui-publish:
-    if: ${{ needs.publish.outputs.should_release == 'true' }}
-
-    needs:
-      - publish
-
-    uses: ./.github/workflows/ui-publish.yml
-    with:
-      version_tag: ${{ needs.publish.outputs.tag_name }}
-      run_id: ${{ github.event.workflow_run.id }}
-    secrets:
-      hf_token: ${{ secrets.HF_TOKEN_UI_STATIC_OUTPUT }}
+#  ui-publish:
+#    if: ${{ needs.publish.outputs.should_release == 'true' }}
+#
+#    needs:
+#      - publish
+#
+#    uses: ./.github/workflows/ui-publish.yml
+#    with:
+#      version_tag: ${{ needs.publish.outputs.tag_name }}
+#      run_id: ${{ github.event.workflow_run.id }}
+#    secrets:
+#      hf_token: ${{ secrets.HF_TOKEN_UI_STATIC_OUTPUT }}
